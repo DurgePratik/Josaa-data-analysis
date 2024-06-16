@@ -1,44 +1,53 @@
+
+
 {% extends "new/iit_base.html" %}
     
-{% block title%}iit charts{% endblock title %}
+{% block title %}iit charts{% endblock title %}
 
 {% block script %}
 <script>
-    
-    let selectedCategory='OPEN';
+    let selectedCategory = 'OPEN';
     let selectedBranch = 'Computer Science and Engineering';
-    let selectedGender = 'Gender-Neutral'
+    let selectedGender = 'Gender-Neutral';
+    let selectedChartType = 'line'; // Default value for chart type
 
     let branches = [];
-    let rounds=['Round 1','Round 2','Round 3','Round 4','Round 5','Round 6','Round 7'];
-    let selectedYears = [2016,2017,2018,2019,2020,2021,2022];
-    let closingRank=[];
-    let closingRanksFemale = []; // Array for female supernumerary
-    let closingRanksOther = []; // Array for the rest
+    let rounds = ['Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6', 'Round 7'];
+    let selectedYears = [2016, 2017, 2018, 2019, 2020, 2021, 2022];
+    let closingRanks = {};
 
     function handleButtonClick() {
         window.location.href = "{% url 'iit-list' %}";
     }
 
-
     function changeCategory(category) {
         document.getElementById("categoryDropdown").innerText = category;
         selectedCategory = category;
-        updateclosingRanks();
+        updateClosingRanks();
     }
+
     function changeGender(gender) {
         document.getElementById("genderDropdown").innerText = gender;
         selectedGender = gender;
-        updateclosingRanks();
+        updateClosingRanks();
+    }
+
+    function changeBranch(branch) {
+        document.getElementById("branchDropdown").innerText = branch;
+        selectedBranch = branch;
+        updateClosingRanks();
+    }
+
+    function changeChartType(chartType) {
+        document.getElementById("chartTypeDropdown").innerText = chartType.charAt(0).toUpperCase() + chartType.slice(1);
+        selectedChartType = chartType;
+        updateChart();
     }
 
     var data = JSON.parse('{{ data|escapejs }}');
     for (let i = 0; i < data.length; i++) {
         let adm = data[i].fields;
         let academicProgramName = adm.academic_program_name;
-        let year = adm.year;
-        let seatType = adm.seat_type;
-        let round = adm.round;
         let branch = academicProgramName.split('(')[0].trim(); // Extract the branch name
         // Add the branch to the array if it doesn't already exist
         if (!branches.includes(branch)) {
@@ -46,14 +55,7 @@
         }
     }
 
-    function changeBranch(branch) {
-        document.getElementById("branchDropdown").innerText = branch;
-        selectedBranch = branch;
-        updateclosingRanks();
-    }
-
-    let closingRanks = {};
-    function updateclosingRanks() {
+    function updateClosingRanks() {
         closingRanks = {};
 
         data.forEach((adm) => {
@@ -66,7 +68,7 @@
             if (
                 admFields.seat_type === selectedCategory &&
                 branch === selectedBranch &&
-                ((selectedGender === 'Gender-Neutral' && (gender === '' || gender === 'Gender-Neutral')) || gender === selectedGender) 
+                ((selectedGender === 'Gender-Neutral' && (gender === '' || gender === 'Gender-Neutral')) || gender === selectedGender)
             ) {
                 if (!closingRanks.hasOwnProperty(year)) {
                     closingRanks[year] = [];
@@ -76,89 +78,73 @@
             }
         });
 
-        // console.log('branch select',selectedBranch);
-        // console.log('category select',selectedCategory);
-        // console.log('gender select', selectedGender);
-        // console.log('closing ranks', closingRanks);
-
         updateChart();
     }
 
     let myChart;
 
-function updateChart() {
-    let ctx = document.getElementById('myChart').getContext('2d');
-    if (myChart) {
-        myChart.destroy();
-    }
-
-    let datasets = [];
-    
-    // Iterate over each year in the closingRanks object
-    for (let year in closingRanks) {
-        if (closingRanks.hasOwnProperty(year)) {
-            let dataOther = closingRanks[year]; // Get the dataset for the year
-            // console.log('dataset ele',dataOther)
-            // Create a dataset object for the year
-            let colour = getRandomColor();
-            let datasetOther = {
-                label: `Closing Rank - ${year}`,
-                data: dataOther,
-                borderColor: colour,
-                backgroundColor: colour,
-                fill: false
-            };
-            datasets.push(datasetOther);
+    function updateChart() {
+        let ctx = document.getElementById('myChart').getContext('2d');
+        if (myChart) {
+            myChart.destroy();
         }
-    }
 
-    myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: rounds,
-            datasets: datasets
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    display: true,
-                    title: {
+        let datasets = [];
+        for (let year in closingRanks) {
+            if (closingRanks.hasOwnProperty(year)) {
+                let dataOther = closingRanks[year]; // Get the dataset for the year
+                let colour = getRandomColor();
+                let datasetOther = {
+                    label: `Closing Rank - ${year}`,
+                    data: dataOther,
+                    borderColor: colour,
+                    backgroundColor: colour,
+                    fill: false
+                };
+                datasets.push(datasetOther);
+            }
+        }
+
+        myChart = new Chart(ctx, {
+            type: selectedChartType,
+            data: {
+                labels: rounds,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
                         display: true,
-                        text: 'Round'
-                    }
-                },
-                y: {
-                    display: true,
-                    title: {
+                        title: {
+                            display: true,
+                            text: 'Round'
+                        }
+                    },
+                    y: {
                         display: true,
-                        text: 'Closing Rank'
+                        title: {
+                            display: true,
+                            text: 'Closing Rank'
+                        }
                     }
                 }
             }
-        }
-    });
-}
+        });
+    }
 
-
-    // Helper function to generate random color
     function getRandomColor() {
-    let letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
+        let letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
     }
-    return color;
-    }
-
-
-
 
     $(document).ready(function() {
-        // Populate the branch dropdown menu
         const branchDropdownMenu = document.getElementById("branchDropdownMenu");
 
-        // Clear existing options
         branchDropdownMenu.innerHTML = "";
 
         branches.forEach(function(branch) {
@@ -172,16 +158,14 @@ function updateChart() {
 
             branchDropdownMenu.appendChild(branchOption);
         });
-        // Call the updateclosingRanks function initially
-        updateclosingRanks();
 
+        updateClosingRanks();
     });
 
 </script>
 {% endblock %}
 
 {% block content %}
-
 <div class="container mt-5">
     <div class="card">
         <div class="card" style="text-align: center;">
@@ -224,6 +208,17 @@ function updateChart() {
                         <a class="dropdown-item" href="#" onclick="changeGender('Female-only (including Supernumerary)')">Female</a>
                     </div>
                 </div>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle ml-3" type="button" id="chartTypeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Line
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="chartTypeDropdown">
+                        <a class="dropdown-item" href="#" onclick="changeChartType('line')">Line</a>
+                        <a class="dropdown-item" href="#" onclick="changeChartType('bar')">Bar</a>
+                        <a class="dropdown-item" href="#" onclick="changeChartType('pie')">Pie</a>
+                        <a class="dropdown-item" href="#" onclick="changeChartType('doughnut')">Doughnut</a>
+                    </div>
+                </div>
                 <button class="btn btn-primary ml-auto" onclick="handleButtonClick()">Go to iit-list</button>
             </div>
             <div class="image-container">
@@ -234,4 +229,3 @@ function updateChart() {
 </div>
 
 {% endblock %}
-

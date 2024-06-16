@@ -7,11 +7,11 @@
     let selectedRound = 1; // Default value
     let selectedYear = 2016; // Default value
     let selectedCategory='OPEN';
+    let selectedChartType = 'line'; // Default value
     let branches = [];
     let openingRank=[];
     let openingRanksFemale = []; // Array for female supernumerary
     let openingRanksOther = []; // Array for the rest
-
 
     function changeYear(year) {
         document.getElementById("yearDropdown").innerText = year;
@@ -42,6 +42,12 @@
         }
         selectedRound = round;
         updateOpeningRanks();
+    }
+
+    function changeChartType(chartType) {
+        document.getElementById("chartTypeDropdown").innerText = chartType.charAt(0).toUpperCase() + chartType.slice(1);
+        selectedChartType = chartType;
+        updateChart();
     }
 
     var data = JSON.parse('{{ data|escapejs }}');
@@ -86,53 +92,42 @@
             }
         });
 
-        // // Print the opening ranks arrays
-        // console.log("Opening Ranks:", openingRanks);
-        // console.log("Opening Ranks (Female-only):", openingRanksFemale);
-        // console.log("Opening Ranks (Other):", openingRanksOther);
-        // console.log("Branches: ", branches);
         updateChart();
     }
     
     let myChart;
 
     function updateChart() {
-        if (typeof myChart !== 'undefined' && myChart !== null) {
-            // Update the chart data and labels
-            myChart.data.labels = branches;
-            myChart.data.datasets[0].data = openingRanksOther;
-            myChart.update(); // Update the chart
-        } else {
-            // Create a new chart instance
-            const ctx = document.getElementById('myChart');
+        const ctx = document.getElementById('myChart').getContext('2d');
 
-            myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: branches,
-                    datasets: [{
-                        label: '# of Votes',
-                        data: openingRanks,
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+        if (myChart) {
+            myChart.destroy(); // Destroy the existing chart before creating a new one
+        }
+
+        myChart = new Chart(ctx, {
+            type: selectedChartType,
+            data: {
+                labels: branches,
+                datasets: [{
+                    label: 'Opening Rank',
+                    data: openingRanksOther,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
                 }
-            });
-        }
+            }
+        });
     }
 
     $(document).ready(function() {
         // Call the updateOpeningRanks function initially
         updateOpeningRanks();
-
     });
-
 
 </script>
 {% endblock %}
@@ -182,8 +177,19 @@
                         <a class="dropdown-item" href="#" onclick="changeCategory('ST')">ST</a>
                     </div>
                 </div>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle ml-3" type="button" id="chartTypeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Line
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="chartTypeDropdown">
+                        <a class="dropdown-item" href="#" onclick="changeChartType('line')">Line</a>
+                        <a class="dropdown-item" href="#" onclick="changeChartType('bar')">Bar</a>
+                        <a class="dropdown-item" href="#" onclick="changeChartType('pie')">Pie</a>
+                        <a class="dropdown-item" href="#" onclick="changeChartType('doughnut')">Doughnut</a>
+                    </div>
+                </div>
             </div>
-            <div class="image-container">
+            <div class="image-container mt-3">
                 <canvas id="myChart"></canvas>
             </div>
         </div>
@@ -191,4 +197,3 @@
 </div>
 
 {% endblock %}
-
