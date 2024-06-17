@@ -1,0 +1,48 @@
+{% extends "new/base.html" %}
+
+{% block content %}
+<div class="top-right">
+    <div class="content-section">
+        <h3>Popular questions</h3>
+        <p class='text-muted'>Most famous questions in our website.</p>
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-light"><a href="{% url 'iitb' college='Indian Institute of Technology Bombay' %}" style="color:#5f788a;">Popular Branches</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'iit-list' %}" style="color:#5f788a;">Which IITs are preferred by students</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'iitb' college='Indian Institute of Technology Bombay' %}" style="color:#5f788a;">Seat allotments for CSE</a></li>
+        </ul>
+    </div>
+</div>
+
+    <div class="container-fluid">
+            <div class="py-4 mb-2 container">
+    
+                <h3 class="text-center">Contact US</h3>
+            </div>
+
+    <form method ="post" action="{% url 'josaa-contact' %}">
+                {% csrf_token %}
+     <div class="form-group mb-3">
+        <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" name ="name" id="name" placeholder="enter your name">
+        </div>
+    <div class="form-group mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email Address</label>
+    <input type="email" class="form-control" id="email" name="email" placeholder="enter your email">
+
+    </div>  
+    <div class="form-group mb-3">
+        <label for="phone" class="form-label">Phone Number</label>
+    <input type="Phone" class="form-control" id="phone" name="phone" placeholder="enter your number">
+
+    </div>
+    <div class=" form-group mb-3">
+        <label for="desc" class="form-label">Your Description</label>
+        <textarea name="desc" id="desc" rows = "3" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    </div>
+    </div>
+
+
+{% endblock content %}

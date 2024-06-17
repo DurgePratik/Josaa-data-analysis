@@ -1,8 +1,24 @@
 {% extends "new/base.html" %}
 {% block content %}
+<div class="top-right">
+    <div class="content-section">
+        <h3>Popular questions</h3>
+        <p class='text-muted'>Most famous questions in our website.</p>
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-light"><a href="{% url 'iitb' college='Indian Institute of Technology Bombay' %}" style="color:#5f788a;">Popular Branches</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'iit-list' %}" style="color:#5f788a;">Which IITs are preferred by students</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'iitb' college='Indian Institute of Technology Bombay' %}" style="color:#5f788a;">Seat allotments for CSE</a></li>
+        </ul>
+    </div>
+</div>
+
+<div>
+
     <h1>About page</h1>
     <p>
         The site is written using django framework, and utilizes the chart.js library for visualizing the data.<br>
         The data is obtained from the JoSAA archives using beautiful soup library. 
     </p>
+</div>
+
 {% endblock content %}

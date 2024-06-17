@@ -5,6 +5,7 @@ from new.views import *
 urlpatterns = [
     path('', views.home,name='josaa-home'),
     path('about/', views.about,name='josaa-about'),
+    path('contact/', views.contact,name='josaa-contact'),
     path('iitList/', views.iitList,name='iit-list'),
     # path('iitb/',views.iitb,name='iitb'),
     path('iitb/<str:college>/', views.iitb, name='iitb'),
