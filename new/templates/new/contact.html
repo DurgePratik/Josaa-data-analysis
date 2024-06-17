@@ -1,0 +1,36 @@
+{% extends "new/base.html" %}
+
+{% block content %}
+    <div class="container-fluid">
+            <div class="py-4 mb-2 container">
+    
+                <h3 class="text-center">Contact US</h3>
+            </div>
+
+    <form method ="post" action="{% url 'josaa-contact' %}">
+                {% csrf_token %}
+     <div class="form-group mb-3">
+        <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" name ="name" id="name" placeholder="enter your name">
+        </div>
+    <div class="form-group mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email Address</label>
+    <input type="email" class="form-control" id="email" name="email" placeholder="enter your email">
+
+    </div>  
+    <div class="form-group mb-3">
+        <label for="phone" class="form-label">Phone Number</label>
+    <input type="Phone" class="form-control" id="phone" name="phone" placeholder="enter your number">
+
+    </div>
+    <div class=" form-group mb-3">
+        <label for="desc" class="form-label">Your Description</label>
+        <textarea name="desc" id="desc" rows = "3" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    </div>
+    </div>
+
+
+{% endblock content %}
