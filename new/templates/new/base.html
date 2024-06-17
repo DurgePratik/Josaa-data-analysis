@@ -16,6 +16,17 @@
     {% else %}
         <title>JOSAA-data-analysis</title>
     {% endif %}
+
+<!-- custom css for positioning -->
+    <style>
+        .top-right {
+            position: absolute;
+            top: 20px;
+            left: 850px;
+            width: 300px; /* Adjust width as needed */
+        }
+    </style>
+
 </head>
 <body>
     <!-- Navigation bar -->
@@ -53,18 +64,7 @@
             <div class="col-md-8">
                 {% block content %}{% endblock %}
             </div>
-            <div class="col-md-4">
-                <div class="content-section">
-                    <h3>Popular questions</h3>
-                    <p class='text-muted'>Most famous questions in our website.
-                    <ul class="list-group">
-                        <li class="list-group-item list-group-item-light"><a href="{% url 'iitb' college='Indian Institute of Technology Bombay'%}" style="color:#5f788a;">Popular Branches</a></li>
-                        <li class="list-group-item list-group-item-light"><a href="{% url 'iit-list'%}" style="color:#5f788a;">Which IITs are preferred by students</a></li>
-                        <li class="list-group-item list-group-item-light"><a href="{% url 'iitb' college='Indian Institute of Technology Bombay'%}" style="color:#5f788a;">Seat allotments for CSE</a></li>
-                    </ul>
-                    </p>
-                </div>
-            </div>
+
         </div>
     </main>
 
