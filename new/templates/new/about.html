@@ -1,7 +1,7 @@
 {% extends "new/base.html" %}
 {% block content %}
 <div class="top-right">
-    <div class="content-section">
+    <div class="moving-box" class="content-section">
         <h3>Popular questions</h3>
         <p class='text-muted'>Most famous questions in our website.</p>
         <ul class="list-group">
@@ -15,10 +15,20 @@
 <div>
 
     <h1>About page</h1>
-    <p>
-        The site is written using django framework, and utilizes the chart.js library for visualizing the data.<br>
-        The data is obtained from the JoSAA archives using beautiful soup library. 
-    </p>
+    <div>
+        <h3>Our Mission</h3>
+        <ul>
+            <li>Data Excellence: Employing web scraping techniques to gather and process seat allotment data from the official JOSAA website.</li>
+            <li>Insightful Analysis: Conducting thorough data cleaning and analysis to present accurate and insightful visualizations.</li>
+            <li>User Empowerment: Providing a user-friendly platform where users can explore, analyze, and interpret complex seat allocation trends effortlessly.</li>
+        </ul>
+        <h3>Key Features</h3>
+        <ul>
+            <li>Interactive Visualizations: Dive into dynamic charts and tables that illustrate trends in seat allotments across institutes, categories, and years.</li>
+            <li>Historical Trends: Track changes in branch popularity, closing ranks, and student flows among institutes over the years.</li>
+            <li>User-Friendly Interface: Navigate seamlessly through our intuitive interface designed for both casual exploration and in-depth research.</li>
+        </ul>
+    </div>
 </div>
 
 {% endblock content %}
